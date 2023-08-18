@@ -4,6 +4,8 @@ T2 = 108
 T3 = 114
 T4 = 60
 T5 = 96
+Ttva = 18/100
+Seuil = 0
 
 def est_premier_achat_du_mois(date_dernier_achat):
     date_actuelle = datetime.now()
@@ -39,17 +41,17 @@ def calculate_invoice(M, Ec, PF, Rd, TQR):
                     Tsdaae = (3 * Ea) + (2 * Ec)
                     Tde = 2 * Ea
                     CEa = (Ea * T2) + ((Ec - 50) * (T2 - T1))
-                elif 150 < (M - TQR - 0.18 * ((PF + Rd) + (T2 + 5) * (Ec - 150)) - (Ec - 50) * (T2 - T1) - 2 * Ec) / ((T2 + 5) + 0.18 * (T2 + 5)) + Ec <= 200:
-                    Ea = (M - TQR - 0.18 * ((PF + Rd) + (T2 + 5) * (Ec - 150)) - (Ec - 50) * (T2 - T1) - 2 * Ec) / ((T2 + 5) + 0.18 * (T2 + 5))
-                    TVA = 0.18 * (PF + Rd + (Ec - 150) * (T2 + 5) + Ea * (T2 + 5))
+                elif 150 < (M - TQR - Ttva * ((PF + Rd) + (T2 + 5) * (Ec - 150)) - (Ec - 50) * (T2 - T1) - 2 * Ec) / ((T2 + 5) + Ttva * (T2 + 5)) + Ec <= 200:
+                    Ea = (M - TQR - Ttva * ((PF + Rd) + (T2 + 5) * (Ec - 150)) - (Ec - 50) * (T2 - T1) - 2 * Ec) / ((T2 + 5) + Ttva * (T2 + 5))
+                    TVA = Ttva * (PF + Rd + (Ec - 150) * (T2 + 5) + Ea * (T2 + 5))
                     Tsdaae = (3 * Ea) + (2 * Ec)
                     Tde = 2 * Ea
                     CEa = (Ea * T2) + ((Ec - 50) * (T2 - T1))
                 else:
-                    Ea = (M - (2 * Ec) - TQR - 0.18 * (PF + Rd + (50 * T2) + (Ec - 200) * T3 + (Ec - 150) * 5) - (Ec - 200) * T3 - (150 * T2) - (50 - Ec) * T1) / ((T3 + 5) + 0.18 * (T3 + 5))
+                    Ea = (M - (2 * Ec) - TQR - Ttva * (PF + Rd + (50 * T2) + (Ec - 200) * T3 + (Ec - 150) * 5) - (Ec - 200) * T3 - (150 * T2) - (50 - Ec) * T1) / ((T3 + 5) + Ttva * (T3 + 5))
                     Tsdaae = (3 * Ea) + (2 * Ec)
                     Tde = 2 * Ea
-                    TVA = 0.18 * (Ea * (T3 + 5) + (PF + Rd + (50 * T2) + (Ec - 200) * T3 + (Ec - 150) * 5))
+                    TVA = Ttva * (Ea * (T3 + 5) + (PF + Rd + (50 * T2) + (Ec - 200) * T3 + (Ec - 150) * 5))
                     CEa = Ea * T3 + (Ec - 200) * T3 + 150 * T2 + (50 - Ec) * T1
 
             elif 50 < Ec <= 150:
@@ -59,38 +61,38 @@ def calculate_invoice(M, Ec, PF, Rd, TQR):
                     Tsdaae = 3 * Ea
                     TVA = 0
                     CEa = Ea * T2
-                elif 150 < (M - TQR - 0.18 * (PF + Rd + (Ec - 150) * (T2 + 5))) / ((T2 + 5) + 0.18 * (T2 + 5)) + Ec <= 200:
-                    Ea = (M - TQR - 0.18 * (PF + Rd + (Ec - 150) * (T2 + 5))) / ((T2 + 5) + 0.18 * (T2 + 5))
+                elif 150 < (M - TQR - Ttva * (PF + Rd + (Ec - 150) * (T2 + 5))) / ((T2 + 5) + Ttva * (T2 + 5)) + Ec <= 200:
+                    Ea = (M - TQR - Ttva * (PF + Rd + (Ec - 150) * (T2 + 5))) / ((T2 + 5) + Ttva * (T2 + 5))
                     Tde = 2 * Ea
                     Tsdaae = 3 * Ea
-                    TVA = 0.18 * (PF + Rd + (Ec - 150) * (T2 + 5) + Ea * (T2 + 5))
+                    TVA = Ttva * (PF + Rd + (Ec - 150) * (T2 + 5) + Ea * (T2 + 5))
                     CEa = Ea * T2
                 else:
-                    Ea = (M - TQR - (Ec - 200) * (T3 - T2) - 0.18 * (PF + Rd + (50 * T2) + (Ec - 200) * T3 + (Ec - 150) * 5)) / ((T3 + 5) + 0.18 * (T3 + 5))
+                    Ea = (M - TQR - (Ec - 200) * (T3 - T2) - Ttva * (PF + Rd + (50 * T2) + (Ec - 200) * T3 + (Ec - 150) * 5)) / ((T3 + 5) + Ttva * (T3 + 5))
                     Tde = 2 * Ea
                     Tsdaae = 3 * Ea
-                    TVA = 0.18 * (PF + Rd + (50 * T2) + (Ec - 200) * T3 + (Ec - 150) * 5 + Ea * (T3 + 5))
+                    TVA = Ttva * (PF + Rd + (50 * T2) + (Ec - 200) * T3 + (Ec - 150) * 5 + Ea * (T3 + 5))
                     CEa = (Ea * T3) + (Ec - 200) * (T3 - T2)
 
             elif 150 < Ec <= 200:
-                if (M - TQR) / ((T2 + 5) + 0.18 * (T2 + 5)) + Ec <= 200:
-                    Ea = (M - TQR) / ((T2 + 5) + 0.18 * (T2 + 5))
+                if (M - TQR) / ((T2 + 5) + Ttva * (T2 + 5)) + Ec <= 200:
+                    Ea = (M - TQR) / ((T2 + 5) + Ttva * (T2 + 5))
                     Tde = 2 * Ea
                     Tsdaae = 3 * Ea
-                    TVA = 0.18 * (Ea * (T2 + 5))
+                    TVA = Ttva * (Ea * (T2 + 5))
                     CEa = Ea * T2
                 else:
-                    Ea = (M - TQR - (0.18 * (Ec - 200) * (T3 - T2)) - (Ec - 200) * (T3 - T2)) / ((T3 + 5) + 0.18 * (T3 + 5))
+                    Ea = (M - TQR - (Ttva * (Ec - 200) * (T3 - T2)) - (Ec - 200) * (T3 - T2)) / ((T3 + 5) + Ttva * (T3 + 5))
                     Tde = 2 * Ea
                     Tsdaae = 3 * Ea
-                    TVA = 0.18 * (Ea * (T3 + 5) + (Ec - 200) * (T3 - T2))
+                    TVA = Ttva * (Ea * (T3 + 5) + (Ec - 200) * (T3 - T2))
                     CEa = Ea * T3 + (Ec - 200) * (T3 - T2)
 
             else:
-                Ea = (M - TQR) / ((T3 + 5) + 0.18 * (T3 + 5))
+                Ea = (M - TQR) / ((T3 + 5) + Ttva * (T3 + 5))
                 Tde = 2 * Ea
                 Tsdaae = 3 * Ea
-                TVA = 0.18 * (Ea * (T3 + 5))
+                TVA = Ttva * (Ea * (T3 + 5))
                 CEa = Ea * T3
             
             return Ea, TVA, Tsdaae, Tde, CEa
@@ -108,18 +110,18 @@ def calculer_valeurs(M, TQR, PF, Rd, dd):
         Tde = 2 * E
         Tsdaae = 3 * E
         TVA = 0
-    elif 150 < (M + (0.18 * (5 + T2) * 150) + (50 * T2) - PF - Rd - TQR - (50 * T1) - (0.18 * ((PF + Rd) / dd))) / ((T2 + 5) + 0.18 * (5 + T2)) <= 200:
-        E = (M + (0.18 * (5 + T2) * 150) + (50 * T2) - PF - Rd - TQR - (50 * T1) - (0.18 * ((PF + Rd) / dd))) / ((T2 + 5) + 0.18 * (5 + T2))
+    elif 150 < (M + (Ttva * (5 + T2) * 150) + (50 * T2) - PF - Rd - TQR - (50 * T1) - (Ttva * ((PF + Rd) / dd))) / ((T2 + 5) + Ttva * (5 + T2)) <= 200:
+        E = (M + (Ttva * (5 + T2) * 150) + (50 * T2) - PF - Rd - TQR - (50 * T1) - (Ttva * ((PF + Rd) / dd))) / ((T2 + 5) + Ttva * (5 + T2))
         CE = (T1 * 50) + (E - 50) * T2
         Tde = 2 * E
         Tsdaae = 3 * E
-        TVA = 0.18 * ((PF + Rd) / dd + (E - 150) * T2 + (E - 150) * 5)
+        TVA = Ttva * ((PF + Rd) / dd + (E - 150) * T2 + (E - 150) * 5)
     else:
-        E = (M + (0.18 * (200 * T3 + 750)) + (200 * T3) - PF - Rd - TQR - (150 * T2) - (50 * T1) - 0.18 * ((PF + Rd) / dd + (50 * T2))) / ((T3 + 5) + 0.18 * (5 + T3))
+        E = (M + (Ttva * (200 * T3 + 750)) + (200 * T3) - PF - Rd - TQR - (150 * T2) - (50 * T1) - Ttva * ((PF + Rd) / dd + (50 * T2))) / ((T3 + 5) + Ttva * (5 + T3))
         CE = (T1 * 50) + (150 * T2) + (E - 200) * T3
         Tde = 2 * E
         Tsdaae = 3 * E
-        TVA = 0.18 * ((PF + Rd) / dd + (E - 200) * T3 + (50 * T2) + (E - 150) * 5)
+        TVA = Ttva * ((PF + Rd) / dd + (E - 200) * T3 + (50 * T2) + (E - 150) * 5)
     
     return CE, E, Tde, Tsdaae, TVA
 
