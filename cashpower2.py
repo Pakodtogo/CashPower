@@ -210,7 +210,7 @@ def main():
 
 
         if M - Taxes < 0:
-            print("\n Vous ne pouvez pas acheter des unites!\n Vous avez un credit de" ,  Taxes , "FCFA \navant d'avoir droit à des unites\n")
+            print("\nVous ne pouvez pas acheter des unites!\nVous avez un credit de" ,  Taxes , "FCFA \navant d'avoir droit à des unites\n")
         else:
             print("\nRedevance : ", Rd, "\n")
             print("Prime Fixe : ", PF, "\n")
