@@ -34,9 +34,9 @@ def calculate_invoice(M, Ec, PF, Rd, TQR):
                     Tsdaae = (3 * Ea) + (2 * Ec)
                     Tde = 2 * Ea
                     CEa = (Ea * 108) + ((Ec - 50) * (108 - 96))
-                elif 150 < (M - TQR - (0.18 * ((PF + Rd) + (108 + 5) * (Ec - 150)) - (Ec - 50) * (108 - 96) - 2 * Ec)) / ((108 + 5) + 0.18 * (108 + 5)) + Ec <= 200:
-                    Ea = (M - TQR - (0.18 * ((PF + Rd) + (108 + 5) * (Ec - 150)) - (Ec - 50) * (108 - 96) - 2 * Ec)) / ((108 + 5) + 0.18 * (108 + 5))
-                    TVA = 0.18 * (PF + Rd) + (Ec - 150) * (108 + 5) * Ea * (108 + 5)
+                elif 150 < (M - TQR - 0.18 * ((PF + Rd) + (108 + 5) * (Ec - 150)) - (Ec - 50) * (108 - 96) - 2 * Ec) / ((108 + 5) + 0.18 * (108 + 5)) + Ec <= 200:
+                    Ea = (M - TQR - 0.18 * ((PF + Rd) + (108 + 5) * (Ec - 150)) - (Ec - 50) * (108 - 96) - 2 * Ec) / ((108 + 5) + 0.18 * (108 + 5))
+                    TVA = 0.18 * (PF + Rd + (Ec - 150) * (108 + 5) + Ea * (108 + 5))
                     Tsdaae = (3 * Ea) + (2 * Ec)
                     Tde = 2 * Ea
                     CEa = (Ea * 108) + ((Ec - 50) * (108 - 96))
@@ -44,7 +44,6 @@ def calculate_invoice(M, Ec, PF, Rd, TQR):
                     Ea = (M - (2 * Ec) - TQR - 0.18 * (PF + Rd + (50 * 108) + (Ec - 200) * 114 + (Ec - 150) * 5) - (Ec - 200) * 114 - (150 * 108) - (50 - Ec) * 96) / ((114 + 5) + 0.18 * (114 + 5))
                     Tsdaae = (3 * Ea) + (2 * Ec)
                     Tde = 2 * Ea
-                    Tsdaae = (3 * Ea) + (2 * Ec)
                     TVA = 0.18 * (Ea * (114 + 5) + (PF + Rd + (50 * 108) + (Ec - 200) * 114 + (Ec - 150) * 5))
                     CEa = Ea * 114 + (Ec - 200) * 114 + 150 * 108 + (50 - Ec) * 96
 
@@ -68,7 +67,7 @@ def calculate_invoice(M, Ec, PF, Rd, TQR):
                     TVA = 0.18 * (PF + Rd + (50 * 108) + (Ec - 200) * 114 + (Ec - 150) * 5 + Ea * (114 + 5))
                     CEa = (Ea * 114) + (Ec - 200) * (114 - 108)
 
-            elif Ec <= 200:
+            elif 150 < Ec <= 200:
                 if (M - TQR) / ((108 + 5) + 0.18 * (108 + 5)) + Ec <= 200:
                     Ea = (M - TQR) / ((108 + 5) + 0.18 * (108 + 5))
                     Tde = 2 * Ea
@@ -97,8 +96,8 @@ def main():
     M = int(input("\n Entrez un Montant : "))
     TQR = calcul_TQR(M)
     CT = int(input("\n Entrez le code tarif du compteur : "))
-    if CT != 17032 and CT != 17042 and CT != 17052 and CT != 17062 and CT != 17072:
-        print("\n La valeur que vous avez saisie ne correspond\na aucun code tarif de compteur triphase!\n")
+    if CT != 17032 and CT != 17042 and CT != 17052 and CT != 17062 and CT != 17072 and CT != 17030 and CT != 17040 and CT != 17050 and CT != 17060 and CT != 17070:
+        print("\nLa valeur que vous avez saisie ne correspond\na aucun code tarif de compteur triphase!\n")
     else:
         date_dernier_achat_str = input("\n Entrez la date du dernier achat (YYYY-MM-DD) : ")
         date_dernier_achat = datetime.strptime(date_dernier_achat_str, "%Y-%m-%d")
