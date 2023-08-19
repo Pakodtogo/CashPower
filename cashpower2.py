@@ -287,7 +287,7 @@ def main():
     else:
         if CT == 17030 or CT == 17040 or CT == 17050 or CT == 17060 or CT == 17070:
             print("\nVous etes un agent de la SONABEL\n")
-            Cat = int(input("\nQuelle est votre categorie (1 à 9) ?\n"))
+            Cat = int(input("\nQuelle est votre categorie (1 à 9) ? "))
             if Cat < 1 or  Cat > 9:
                 print("\nErreur! Veuiller entrer une valeur entre 1 et 9 \n")
             elif Cat <= 5:
