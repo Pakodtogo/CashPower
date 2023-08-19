@@ -275,11 +275,11 @@ def agent_non_pam(M, Ec, TQR, PF, Rd, Seuil):
 
 
 def main():
-    M = int(input("\n Entrez un Montant : "))
+    M = int(input("\nEntrez un Montant : "))
 
     TQR = calcul_TQR(M)
 
-    CT = int(input("\n Entrez le code tarif du compteur : "))
+    CT = int(input("\nEntrez le code tarif du compteur : "))
     
     if CT != 17032 and CT != 17042 and CT != 17052 and CT != 17062 and CT != 17072 and CT != 17030 and CT != 17040 and CT != 17050 and CT != 17060 and CT != 17070:
         print("\nLa valeur que vous avez saisie ne correspond\na aucun code tarif de compteur triphase!\nVous n'etes ni client ni agent de la SONABEL")
@@ -294,10 +294,10 @@ def main():
                 Seuil = 600
             else:
                 Seuil =650
-        else: print ("Vous etes un client!")
+        else: print ("\nVous etes un client!")
 
 
-        date_dernier_achat_str = input("\n Entrez la date du dernier achat (YYYY-MM-DD) : ")
+        date_dernier_achat_str = input("\nEntrez la date du dernier achat (YYYY-MM-DD) : ")
         date_dernier_achat = datetime.strptime(date_dernier_achat_str, "%Y-%m-%d")
 
         if est_premier_achat_du_mois(date_dernier_achat):
@@ -469,7 +469,7 @@ def main():
             print("TQR : ", TQR, "\n")
             print("Cout Energie : ", CE, "\n")
             print("Energie payée : ", E, "\n")
-            print("Code à saisir sur vore compteur", combinaison, "\n")
+            print("Code à saisir sur vore compteur:", combinaison, "\n")
 
 if __name__ == "__main__":
     main()
