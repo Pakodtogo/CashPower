@@ -1,4 +1,5 @@
 from datetime import datetime
+import random
 T1 = 96
 T2 = 108
 T3 = 114
@@ -6,6 +7,9 @@ T4 = 60
 T5 = 96
 Ttva = 18/100
 Seuil = 0
+#serie = ''.join([str(random.randint(0, 9)) for _ in range(20)])
+groups_of_digits = [str(random.randint(0, 9999)).zfill(4) for _ in range(5)]
+combinaison = ' '.join(groups_of_digits)
 
 def est_premier_achat_du_mois(date_dernier_achat):
     date_actuelle = datetime.now()
@@ -465,6 +469,7 @@ def main():
             print("TQR : ", TQR, "\n")
             print("Cout Energie : ", CE, "\n")
             print("Energie payée : ", E, "\n")
+            print("Code à saisir sur vore compteur", combinaison, "\n")
 
 if __name__ == "__main__":
     main()
