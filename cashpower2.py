@@ -311,38 +311,34 @@ def main():
                 PF = 10613 * dd
                 Rd = 1226 * dd
                 CE, E, Tde, Tsdaae, TVA = client_pam(M, TQR, PF, Rd, dd)
-                Taxes = PF + Rd + Ttva*((PF + Rd)/dd) + calcul_TQR(PF + Rd + Ttva*((PF + Rd)/dd)) 
             
             elif CT == 17042:
                 PF = 15918 * dd
                 Rd = 1226 * dd
-                CE, E, Tde, Tsdaae, TVA = client_pam(M, TQR, PF, Rd, dd)
-                Taxes = PF + Rd + Ttva*((PF + Rd)/dd) + calcul_TQR(PF + Rd + Ttva*((PF + Rd)/dd))  
+                CE, E, Tde, Tsdaae, TVA = client_pam(M, TQR, PF, Rd, dd) 
          
             elif CT == 17052:
                 PF = 21224 * dd
                 Rd = 1373 * dd
-                CE, E, Tde, Tsdaae, TVA = client_pam(M, TQR, PF, Rd, dd)
-                Taxes = PF + Rd + Ttva*((PF + Rd)/dd) + calcul_TQR(PF + Rd + Ttva*((PF + Rd)/dd))   
+                CE, E, Tde, Tsdaae, TVA = client_pam(M, TQR, PF, Rd, dd)  
          
             elif CT == 17062:
                 PF = 26531 * dd
                 Rd = 1373 * dd
-                CE, E, Tde, Tsdaae, TVA = client_pam(M, TQR, PF, Rd, dd)
-                Taxes = PF + Rd + Ttva*((PF + Rd)/dd) + calcul_TQR(PF + Rd + Ttva*((PF + Rd)/dd))  
+                CE, E, Tde, Tsdaae, TVA = client_pam(M, TQR, PF, Rd, dd)  
                 
             elif CT == 17072:
                 PF = 31837 * dd
                 Rd = 1373  * dd
                 CE, E, Tde, Tsdaae, TVA = client_pam(M, TQR, PF, Rd, dd)
-                Taxes = PF + Rd + Ttva*((PF + Rd)/dd) + calcul_TQR(PF + Rd + Ttva*((PF + Rd)/dd))  
+
+
 
 
             elif CT == 17030:
                 PF = 10613
                 Rd = 1226
                 CE, E, Tde, Tsdaae, TVA = agent_pam(M, TQR, PF, Rd, Seuil)
-                Taxes = Ttva * (PF + Rd) + calcul_TQR(Ttva * (PF + Rd))
                 PF = 0
                 Rd = 0    
             
@@ -350,7 +346,6 @@ def main():
                 PF = 15918
                 Rd = 1226
                 CE, E, Tde, Tsdaae, TVA = agent_pam(M, TQR, PF, Rd, Seuil)
-                Taxes = Ttva * (PF + Rd) + calcul_TQR(Ttva * (PF + Rd))
                 PF = 0
                 Rd = 0
             
@@ -358,7 +353,6 @@ def main():
                 PF = 21224
                 Rd = 1373
                 CE, E, Tde, Tsdaae, TVA = agent_pam(M, TQR, PF, Rd, Seuil)
-                Taxes = Ttva * (PF + Rd) + calcul_TQR(Ttva * (PF + Rd))
                 PF = 0
                 Rd = 0
             
@@ -366,7 +360,6 @@ def main():
                 PF = 26531
                 Rd = 1373
                 CE, E, Tde, Tsdaae, TVA = agent_pam(M, TQR, PF, Rd, Seuil)
-                Taxes = Ttva * (PF + Rd) + calcul_TQR(Ttva * (PF + Rd))
                 PF = 0
                 Rd = 0
 
@@ -374,9 +367,9 @@ def main():
                 PF = 31837
                 Rd = 1373
                 CE, E, Tde, Tsdaae, TVA = agent_pam(M, TQR, PF, Rd, Seuil)
-                Taxes = Ttva * (PF + Rd) + calcul_TQR(Ttva * (PF + Rd))
                 PF = 0
                 Rd = 0
+            Taxes = PF + Rd
             
             
 
@@ -389,45 +382,34 @@ def main():
                 PF = 10613
                 Rd = 1226
                 E, TVA, Tsdaae, Tde, CE = client_non_pam(M, Ec, PF, Rd, TQR)
-                Taxes = PF + Rd + Ttva*((PF + Rd)/dd) + calcul_TQR(PF + Rd + Ttva*((PF + Rd)/dd)) 
 
-        
             elif CT == 17042:
                 PF = 15918
                 Rd = 1373
                 E, TVA, Tsdaae, Tde, CE = client_non_pam(M, Ec, PF, Rd, TQR)
-                Taxes = PF + Rd + Ttva*((PF + Rd)/dd) + calcul_TQR(PF + Rd + Ttva*((PF + Rd)/dd)) 
-        
-        
+                
             elif CT == 17052:
                 PF = 21224
                 Rd = 1373
                 E, TVA, Tsdaae, Tde, CE = client_non_pam(M, Ec, PF, Rd, TQR)
-                Taxes = PF + Rd + Ttva*((PF + Rd)/dd) + calcul_TQR(PF + Rd + Ttva*((PF + Rd)/dd)) 
-        
-
         
             elif CT == 17062:
                 PF = 26531
                 Rd = 1373
                 E, TVA, Tsdaae, Tde, CE = client_non_pam(M, Ec, PF, Rd, TQR)
-                Taxes = PF + Rd + Ttva*((PF + Rd)/dd) + calcul_TQR(PF + Rd + Ttva*((PF + Rd)/dd)) 
-        
-
-        
+                
             elif CT == 17072:
                 PF = 31837
                 Rd = 1373
                 E, TVA, Tsdaae, Tde, CE = client_non_pam(M, Ec, PF, Rd, TQR)
-                Taxes = PF + Rd + Ttva*((PF + Rd)/dd) + calcul_TQR(PF + Rd + Ttva*((PF + Rd)/dd)) 
-            
 
-            
+
+
+    
             elif CT == 17030:
                 PF = 10613
                 Rd = 1226 
                 E, TVA, Tsdaae, Tde, CE = agent_non_pam(M, Ec, TQR, PF, Rd, Seuil)
-                Taxes = Ttva * (PF + Rd) + calcul_TQR(Ttva * (PF + Rd))
                 PF = 0
                 Rd = 0
             
@@ -435,7 +417,6 @@ def main():
                 PF = 15918
                 Rd = 1226
                 E, TVA, Tsdaae, Tde, CE = agent_non_pam(M, Ec, TQR, PF, Rd, Seuil)
-                Taxes = Ttva * (PF + Rd) + calcul_TQR(Ttva * (PF + Rd))
                 PF = 0
                 Rd = 0
             
@@ -443,7 +424,6 @@ def main():
                 PF = 21224
                 Rd = 1373
                 E, TVA, Tsdaae, Tde, CE = agent_non_pam(M, Ec, TQR, PF, Rd, Seuil)
-                Taxes = Ttva * (PF + Rd) + calcul_TQR(Ttva * (PF + Rd))
                 PF = 0
                 Rd = 0
             
@@ -451,7 +431,6 @@ def main():
                 PF = 26531
                 Rd = 1373
                 E, TVA, Tsdaae, Tde, CE = agent_non_pam(M, Ec, TQR, PF, Rd, Seuil)
-                Taxes = Ttva * (PF + Rd) + calcul_TQR(Ttva * (PF + Rd))
                 PF = 0
                 Rd = 0
 
@@ -459,9 +438,9 @@ def main():
                 PF = 31837
                 Rd = 1373
                 E, TVA, Tsdaae, Tde, CE = agent_non_pam(M, Ec, TQR, PF, Rd, Seuil)
-                Taxes = Ttva * (PF + Rd) + calcul_TQR(Ttva * (PF + Rd))
                 PF = 0
                 Rd = 0
+            Taxes = 0 
 
 
         if M - Taxes < 0:
