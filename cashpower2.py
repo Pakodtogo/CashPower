@@ -369,7 +369,7 @@ def main():
                 CE, E, Tde, Tsdaae, TVA = agent_pam(M, TQR, PF, Rd, Seuil)
                 PF = 0
                 Rd = 0
-            Taxes = PF + Rd
+            Taxes = PF + Rd + calcul_TQR(PF + Rd)
             
             
 
