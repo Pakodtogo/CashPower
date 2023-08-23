@@ -130,40 +130,134 @@ def client_pam(M, TQR, PF, Rd, dd):
     return CE, E, Tde, Tsdaae, TVA
 
 def agent_pam(M, TQR, PF, Rd, Seuil):
-    if (M - TQR) / 3 <= 50:
+    if (M) / 3 <= 50:
         E = (M - TQR) / 3
         Tde = 2 * E
         Tsdaae = E
         TVA = 0
         CE = 0
+    
+    elif (M) / 3 > 50    and    (M) / 5 <= 50:
+        Ep =50
+        Tdep = 2 * Ep
+        Tsdaaep = Ep
+        TVAp = 0
+        CEp = 0
+        M1 = 3*Ep + calcul_TQR(3*Ep)
+        TQR = calcul_TQR(M1)
+        M2 = 3*Ep + TQR
+        Ms = M - M2
+        TQRs = calcul_TQR(Ms)
+        #if (Ms) <= 2*(Ep): print("Monnaie =", Ms, "FCFA")    dans tous les cas Ms sera <= 2*(Ep)
+        # SA = (2*Ep - MS)+1
+        # print("Vous ajouter", SA)
+        #MA = float(input("Entrer la somme ajoutee: "))
+        # if MA > = SA : M = M+MA et TQR = calculTQR(M)
+        '''Es = (Ms-TQRs-2*Ep)/5
+        Tdes = 2*Es
+        Tsdaaes = 3*Es + 2*Ep
+        TVAs = 0
+        CEs = 0'''
+        # if MA = 0 : et il ya monnaie print("Monnaie =", Ms, "FCFA")
+        E = Ep + Es
+        TVA =TVAp + TVAs
+        Tsdaae = Tsdaaep + Tsdaaes
+        Tde = Tdep + Tdes
+        CE = CEp + CEs
         
 
-    elif 50 < (M - TQR) / 5 <= 150:
-        E = (M - TQR) / 5
+    elif 50 < (M) / 5 <= 150:
+        E = (M) / 5
         Tde = 2 * E
         Tsdaae = 3 * E
         TVA = 0
         CE = 0
-        
+    
+    elif (M) / 5 > 150 and (M - Ttva * (PF + Rd - 750)) / (5 + (Ttva * 5)) <= 150:
+        Ep =150
+        Tdep = 2 * Ep
+        Tsdaaep = 3*Ep
+        TVAp = 0
+        CEp = 0
+        M1 = 5*Ep  #+ calcul_TQR(5*Ep)
+        #TQR = calcul_TQR(M1)
+        M2 = 5*Ep
+        Ms = M - M2
+        #TQRs = calcul_TQR(Ms)
+        # Taxe = Ttva*(PF+Rd) + calcul_TQR(Ttva*(PF+Rd)+1
+        #if (Ms - Ttva*(PF + Rd)) <= 0: print("Votre montant vous soumet a la TVA Mais ne suffit pas pour payer la TVA. Si vous reprenez ", Ms , " Fcfa, vous serez exempté de la TVA et vous aurez ", Es, " KWh. Mais pour votre prochain achat dans ce mois, vous devrez d'abord payer ", Taxe , " Fcfa!")
+        Es = (Ms) / (5 + (Ttva * 5))
+        Tdes = 2*Es
+        Tsdaaes = 3*Es
+        TVAs = Ttva * Es * 5 #  Ttva*(Es*5)
+        CEs = 0
+        E = Ep + Es
+        TVA =TVAp + TVAs
+        Tsdaae = Tsdaaep + Tsdaaes
+        Tde = Tdep + Tdes
+        CE = CEp + CEs
 
-    elif 150 < (M - TQR - Ttva * (PF + Rd - 750)) / (5 + (Ttva * 5)) <= Seuil:
-        E = (M - TQR - Ttva * (PF + Rd - 750)) / (5 + (Ttva * 5))
+    elif 150 < (M - Ttva * (PF + Rd - 750)) / (5 + (Ttva * 5)) <= Seuil:
+        E = (M - Ttva * (PF + Rd - 750)) / (5 + (Ttva * 5))
         Tde = 2 * E
         Tsdaae = 3 * E
         TVA = Ttva * (PF + Rd + (E - 150) * 5)
         CE = 0
-        
+    
+    elif (M - Ttva * (PF + Rd - 750)) / (5 + (Ttva * 5)) > Seuil and (M - Ttva * (PF + Rd - (Seuil * T4) - 750) + (Seuil * T4)) / ((T4 + 5) + Ttva * (T4 + 5)) <= Seuil:
+        Ep =Seuil
+        Tdep = 2 * Ep
+        Tsdaaep = 3*Ep
+        TVAp = Ttva * (PF + Rd + (Ep - 150) * 5)
+        CEp = 0
+        M1 = Ep*(5+ Ttva*5) + Ttva*(PF+Rd-750) #+ calcul_TQR(Ep*(5+ Ttva*5) + Ttva*(PF+Rd-750))
+        #TQR = calcul_TQR(M1)
+        M2 = Ep*(5+ Ttva*5) + Ttva*(PF+Rd-750)
+        Ms = M - M2
+        #TQRs = calcul_TQR(Ms)
+        Es = (Ms) / ((T4+5)+Ttva*(T4+5))
+        Tdes = 2*Es
+        Tsdaaes = 3*Es
+        TVAs = Ttva * Es * (T4 + 5)
+        CEs = Es * T4
+        E = Ep + Es
+        TVA =TVAp + TVAs
+        Tsdaae = Tsdaaep + Tsdaaes
+        Tde = Tdep + Tdes
+        CE = CEp + CEs
 
-    elif Seuil < (M - TQR - Ttva * (PF + Rd - (Seuil * T4) - 750) + (Seuil * T4)) / ((T4 + 5) + Ttva * (T4 + 5)) <= Seuil + 150:
-        E = (M - TQR - Ttva * (PF + Rd - (Seuil * T4) - 750) + (Seuil * T4)) / ((T4 + 5) + Ttva * (T4 + 5))
+    elif Seuil < (M - Ttva * (PF + Rd - (Seuil * T4) - 750) + (Seuil * T4)) / ((T4 + 5) + Ttva * (T4 + 5)) <= Seuil + 150:
+        E = (M - Ttva * (PF + Rd - (Seuil * T4) - 750) + (Seuil * T4)) / ((T4 + 5) + Ttva * (T4 + 5))
         Tde = 2 * E
         Tsdaae = 3 * E
         TVA = Ttva * (E * (T4 + 5) + (PF + Rd - (Seuil * T4) - 750))
         CE = (E * T4) - (Seuil * T4)
+    
+    elif (M - TQR - Ttva * (PF + Rd - (Seuil * T4) - 750) + (Seuil * T4)) / ((T4 + 5) + Ttva * (T4 + 5)) > (Seuil + 150) and (M - TQR - Ttva * (PF + Rd + (150 * T4) - ((Seuil + 150) * T5) - 750) - (150 * T4) + ((Seuil + 150) * T5)) / ((T5 + 5) + Ttva * (T5 + 5)) <= (Seuil+ 150):
+        Ep =(Seuil+150)
+        Tdep = 2 * Ep
+        Tsdaaep = 3*Ep
+        TVAp =  Ttva * (Ep * (T4 + 5) + (PF + Rd - (Seuil * T4) - 750))
+        CEp = (Ep * T4) - (Seuil * T4)
+        M1 = Ep*((T4+5)+ Ttva*(T4+5)) + Ttva*(PF+Rd - Seuil*T4 - 750) +  Seuil*T4 + calcul_TQR(Ep*((T4+5)+ Ttva*(T4+5)) + Ttva*(PF+Rd - Seuil*T4 - 750) +  Seuil*T4)
+        #TQR = calcul_TQR(M1)
+        M2 = Ep*((T4+5)+ Ttva*(T4+5)) + Ttva*(PF+Rd - Seuil*T4 - 750) +  Seuil*T4 + TQR
+        Ms = M - M2
+        #TQRs = calcul_TQR(Ms)
+        Es = (Ms) / ((T5+5)+Ttva*(T5+5))
+        Tdes = 2*Es
+        Tsdaaes = 3*Es
+        TVAs = Ttva * Es * (T5 + 5)
+        CEs = Es * T5
+        E = Ep + Es
+        TVA =TVAp + TVAs
+        Tsdaae = Tsdaaep + Tsdaaes
+        Tde = Tdep + Tdes
+        CE = CEp + CEs
         
 
     else:
-        E = (M - TQR - Ttva * (PF + Rd + (150 * T4) - ((Seuil + 150) * T5) - 750) - (150 * T4) + ((Seuil + 150) * T5)) / ((T5 + 5) + Ttva * (T5 + 5))
+        E = (M - Ttva * (PF + Rd + (150 * T4) - ((Seuil + 150) * T5) - 750) - (150 * T4) + ((Seuil + 150) * T5)) / ((T5 + 5) + Ttva * (T5 + 5))
         Tde = 2 * E
         Tsdaae = 3 * E
         TVA = Ttva * (E * (T5 + 5) + (PF + Rd + (150 * T4) - ((Seuil + 150) * T5) - 750))
@@ -172,80 +266,246 @@ def agent_pam(M, TQR, PF, Rd, Seuil):
 
 def agent_non_pam(M, Ec, TQR, PF, Rd, Seuil):
     if Ec <= 50:
-        if Ec + (M - TQR) / 3 <= 50:
+        if Ec + (M) / 3 <= 50:
             Ea = (M - TQR) / 3
             TVA = 0
             Tsdaae = Ea
             Tde = 2 * Ea
             CEa = 0
-        elif 50 < Ec + (M - TQR - 2 * Ec) / 5 <= 150:
-            Ea = (M - TQR - 2 * Ec) / 5
+        
+        elif ((M) / 3) + Ec> 50 and Ec + (M - 2 * Ec) / 5 <= 50:
+            Ep = 50 - Ec
+            Tdep = 2 * Ep
+            Tsdaaep = Ep
+            TVAp = 0
+            CEp = 0
+            M1 = 3*Ep #+ calcul_TQR(3*Ep)
+            #TQR = calcul_TQR(M1)
+            M2 = 3*Ep
+            Ms = M - M2
+            #TQRs = calcul_TQR(Ms)
+            #if (Ms-TQRs-2*(Ep+Ec)) <= 0: print("Monnaie =", Ms, "FCFA")
+            Es = (Ms-2*(Ep+Ec))/5
+            Tdes = 2*Es
+            Tsdaaes = 3*Es + 2*(Ep+Ec)
+            TVAs = 0
+            CEs = 0
+            Ea = Ep + Es
+            TVA =TVAp + TVAs
+            Tsdaae = Tsdaaep + Tsdaaes
+            Tde = Tdep + Tdes
+            CEa = CEp + CEs
+
+        elif 50 < Ec + (M - 2 * Ec) / 5 <= 150:
+            Ea = (M - 2 * Ec) / 5
             TVA = 0
             Tsdaae = 3 * Ea + 2 * Ec
             Tde = Ea * 2
             CEa = 0
-        elif 150 < (M - TQR - Ttva * (PF + Rd + 5 * Ec - 750) - 2 * Ec) / (5 + (5 * Ttva)) + Ec <= Seuil:
-            Ea = (M - TQR - Ttva * (PF + Rd + 5 * Ec - 750) - 2 * Ec) / (5 + (5 * Ttva))
+        
+        elif Ec + (M - 2 * Ec) / 5 > 150 and (M - Ttva * (PF + Rd + 5 * Ec - 750) - 2 * Ec) / (5 + (5 * Ttva)) + Ec <= 150:
+            Ep = 150 - Ec
+            Tdep = 2 * Ep
+            Tsdaaep = 3*Ep + 2*Ec
+            TVAp = 0
+            CEp = 0
+            M1 = 5*Ep + 2*Ec #+ calcul_TQR(5*Ep + 2*Ec)
+            #TQR = calcul_TQR(M1)
+            M2 = 5*Ep + 2*Ec
+            Ms = M - M2
+            #TQRs = calcul_TQR(Ms)
+            # Taxe = Ttva*(PF+Rd) + calcul_TQR(Ttva*(PF+Rd)+1
+            #if (Ms - TQRs - Ttva*(PF + Rd)) <= 0: print("Votre montant vous soumet a la TVA Mais ne suffit pas pour payer la TVA. Si vous reprenez ", Ms , " Fcfa, vous serez exempté de la TVA et vous aurez ", Es, " KWh. Mais pour votre prochain achat dans ce mois, vous devrez d'abord payer ", Taxe , " Fcfa!")
+            Es = (Ms-2*(Ep+Ec))/(5 + (Ttva * 5))
+            Tdes = 2*Es
+            Tsdaaes = 3*Es + 2*(Ec+Ep)
+            TVAs = Ttva * (5*Es) #  Ttva*(PF + Rd + (Es*5)
+            CEs = 0
+            Ea = Ep + Es
+            TVA =TVAp + TVAs
+            Tsdaae = Tsdaaep + Tsdaaes
+            Tde = Tdep + Tdes
+            CEa = CEp + CEs
+
+        elif 150 < (M - Ttva * (PF + Rd + 5 * Ec - 750) - 2 * Ec) / (5 + (5 * Ttva)) + Ec <= Seuil:
+            Ea = (M - Ttva * (PF + Rd + 5 * Ec - 750) - 2 * Ec) / (5 + (5 * Ttva))
             TVA = Ttva * (PF + Rd + 5 * Ec - 750 + 5 * Ea)
             Tsdaae = 3 * Ea + 2 * Ec
             Tde = Ea * 2
             CEa = 0
-        elif Seuil < (Ec + (M - TQR - Ttva * (PF + Rd + Ec * T4 - Seuil * T4 + 5 * Ec - 750) - 2 * Ec - (Ec - Seuil) * T4) / ((T4 + 5) + Ttva * (5 + T4))) <= (Seuil + 150):
-            Ea = (M - TQR - Ttva * (PF + Rd + Ec * T4 - Seuil * T4 + 5 * Ec - 750) - 2 * Ec - (Ec - Seuil) * T4) / ((T4 + 5) + Ttva * (5 + T4))
+        
+        elif (M - Ttva * (PF + Rd + 5 * Ec - 750) - 2 * Ec) / (5 + (5 * Ttva)) + Ec > Seuil and (Ec + (M - Ttva * (PF + Rd + Ec * T4 - Seuil * T4 + 5 * Ec - 750) - 2 * Ec - (Ec - Seuil) * T4) / ((T4 + 5) + Ttva * (5 + T4))) <= Seuil:
+            Ep = Seuil - Ec
+            Tdep = 2 * Ep
+            Tsdaaep = 3*Ep + 2*Ec
+            TVAp = Ttva * (PF + Rd + 5 * Ec - 750 + 5 * Ep)
+            CEp = 0
+            M1 = Ep*(5 + 5*Ttva) + Ttva*(PF+Rd+5*Ec-750) + 2*Ec + calcul_TQR(Ep*(5 + 5*Ttva) + Ttva*(PF+Rd+5*Ec-750) + 2*Ec)
+            #TQR = calcul_TQR(M1)
+            M2 = Ep*(5 + 5*Ttva) + Ttva*(PF+Rd+5*Ec-750) + 2*Ec
+            Ms = M - M2
+            #TQRs = calcul_TQR(Ms)
+            Es = (M) / ((T4 + 5) + Ttva * (5 + T4))
+            Tdes = 2*Es
+            Tsdaaes = 3*Es
+            TVAs = Ttva * (Es * (T4 + 5))
+            CEs = Es * T4
+            Ea = Ep + Es
+            TVA =TVAp + TVAs
+            Tsdaae = Tsdaaep + Tsdaaes
+            Tde = Tdep + Tdes
+            CEa = CEp + CEs
+
+        elif Seuil < (Ec + (M - Ttva * (PF + Rd + Ec * T4 - Seuil * T4 + 5 * Ec - 750) - 2 * Ec - (Ec - Seuil) * T4) / ((T4 + 5) + Ttva * (5 + T4))) <= (Seuil + 150):
+            Ea = (M - Ttva * (PF + Rd + Ec * T4 - Seuil * T4 + 5 * Ec - 750) - 2 * Ec - (Ec - Seuil) * T4) / ((T4 + 5) + Ttva * (5 + T4))
             TVA = Ttva * (PF + Rd + T4 * Ec - Seuil * T4 + 5 * Ec - 750 + Ea * (T4 + 5))
             Tsdaae = 3 * Ea + 2 * Ec
             Tde = Ea * 2
             CEa = Ea * T4 + (Ec - Seuil) * T4
+        
+        elif (Ec + (M - Ttva * (PF + Rd + Ec * T4 - Seuil * T4 + 5 * Ec - 750) - 2 * Ec - (Ec - Seuil) * T4) / ((T4 + 5) + Ttva * (5 + T4))) > (Seuil + 150)   and   (M - 2 * Ec - Ttva * (PF + Rd + 150 * T4 + (Ec - (Seuil + 150)) * T5 + (Ec - 150) * 5) - (Ec - (Seuil + 150)) * T5 - 150 * T4) / ((T5 + 5) + Ttva * (5 + T5)) + Ec <= (Seuil+ 150):
+            Ep = (Seuil+150) - Ec
+            Tdep = 2 * Ep
+            Tsdaaep = 3*Ep + 2*Ec
+            TVAp = Ttva * (PF + Rd + T4 * Ec - Seuil * T4 + 5 * Ec - 750 + Ep * (T4 + 5))
+            CEp = Ea * T4 + (Ec - Seuil) * T4
+            M1 = Ep*((T4+5) + (T4+5)*Ttva) + Ttva*(PF+Rd+Ec*T4-Seuil*T4+5*Ec-750) + 2*Ec + (Ec - Seuil) * T4 #+ calcul_TQR( Ep*((T4+5) + (T4+5)*Ttva) + Ttva*(PF+Rd+Ec*T4-Seuil*T4+5*Ec-750) + 2*Ec + (Ec - Seuil) * T4)
+            #TQR = calcul_TQR(M1)
+            M2 =  Ep*((T4+5) + (T4+5)*Ttva) + Ttva*(PF+Rd+Ec*T4-Seuil*T4+5*Ec-750) + 2*Ec + (Ec - Seuil) * T4
+            Ms = M - M2
+            #TQRs = calcul_TQR(Ms)
+            Es = (M) / ((T5 + 5) + Ttva * (5 + T5))
+            Tdes = 2*Es
+            Tsdaaes = 3*Es
+            TVAs = Ttva * (Es * (T5 + 5))
+            CEs = Es * T5
+            Ea = Ep + Es
+            TVA =TVAp + TVAs
+            Tsdaae = Tsdaaep + Tsdaaes
+            Tde = Tdep + Tdes
+            CEa = CEp + CEs
         else:
-            Ea = (M - TQR - 2 * Ec - Ttva * (PF + Rd + 150 * T4 + (Ec - (Seuil + 150)) * T5 + (Ec - 150) * 5) - (Ec - (Seuil + 150)) * T5 - 150 * T4) / ((T5 + 5) + Ttva * (5 + T5))
+            Ea = (M - 2 * Ec - Ttva * (PF + Rd + 150 * T4 + (Ec - (Seuil + 150)) * T5 + (Ec - 150) * 5) - (Ec - (Seuil + 150)) * T5 - 150 * T4) / ((T5 + 5) + Ttva * (5 + T5))
             TVA = Ttva * (PF + Rd + 150 * T4 + (Ec - (Seuil + 150)) * T5 + (Ec - 150) * 5 + Ea * (T5 + 5))
             Tsdaae = 3 * Ea + 2 * Ec
             Tde = Ea * 2
             CEa = Ea * T5 + (Ec - (Seuil + 150)) * T5 + 150 * T4
     
     elif 50 < Ec <= 150:
-        if Ec + (M - TQR) / 3 <= 150:
-            Ea = (M - TQR) / 3
+        if Ec + (M) / 3 <= 150:
+            Ea = (M) / 3
             Tde = 2 * Ea
             Tsdaae = 3 * Ea
             TVA = 0
             CEa = 0
-        elif 150 < Ec + (M - TQR - Ttva * (PF + Rd + 5 * Ec - 750)) / (5 + (Ttva * 5)) <= Seuil:
-            Ea = (M - TQR - Ttva * (PF + Rd + 5 * Ec - 750)) / (5 + (Ttva * 5))
+        
+        elif Ec + (M - 2 * Ec) / 5 > 150 and (M - Ttva * (PF + Rd + 5 * Ec - 750) - 2 * Ec) / (5 + (5 * Ttva)) + Ec <= 150:
+            Ep = 150 - Ec
+            Tdep = 2 * Ep
+            Tsdaaep = 3*Ep
+            TVAp = 0
+            CEp = 0
+            M1 = 5*Ep #+ calcul_TQR(5*Ep)
+            #TQR = calcul_TQR(M1)
+            M2 = 5*Ep + TQR
+            Ms = M - M2
+            #TQRs = calcul_TQR(Ms)
+            # Taxe = Ttva*(PF+Rd) + calcul_TQR(Ttva*(PF+Rd)+1
+            #if (Ms - TQRs - Ttva*(PF + Rd)) <= 0: print("Votre montant vous soumet a la TVA Mais ne suffit pas pour payer la TVA. Si vous reprenez ", Ms , " Fcfa, vous serez exempté de la TVA et vous aurez ", Es, " KWh. Mais pour votre prochain achat dans ce mois, vous devrez d'abord payer ", Taxe , " Fcfa!")
+            Es = (Ms)/(5 + (Ttva * 5))
+            Tdes = 2*Es
+            Tsdaaes = 3*Es
+            TVAs = Ttva * (5*Es) #  Ttva*(Es)*5
+            CEs = 0
+            Ea = Ep + Es
+            TVA =TVAp + TVAs
+            Tsdaae = Tsdaaep + Tsdaaes
+            Tde = Tdep + Tdes
+            CEa = CEp + CEs
+
+        
+        elif 150 < Ec + (M - Ttva * (PF + Rd + 5 * Ec - 750)) / (5 + (Ttva * 5)) <= Seuil:
+            Ea = (M - Ttva * (PF + Rd + 5 * Ec - 750)) / (5 + (Ttva * 5))
             Tde = 2 * Ea
             Tsdaae = 3 * Ea
             TVA = Ttva * (PF + Rd + 5 * Ec - 750 + 5 * Ea)
             CEa = 0
-        elif Seuil < Ec + (M - TQR - Ttva * (PF + Rd + (Ec - Seuil) * T4 + (Ec - 150) * 5) - (Ec - Seuil) * T4) / ((T4 + 5) + Ttva * (T4 + 5)) <= (Seuil + 150):
-            Ea = (M - TQR - Ttva * (PF + Rd + (Ec - Seuil) * T4 + (Ec - 150) * 5) - (Ec - Seuil) * T4) / ((T4 + 5) + Ttva * (T4 + 5))
+
+        elif (M - Ttva * (PF + Rd + 5 * Ec - 750)) / (5 + (5 * Ttva)) + Ec > Seuil    and    (Ec + (M - Ttva * (PF + Rd + Ec * T4 - Seuil * T4 + 5 * Ec - 750) - (Ec - Seuil) * T4) / ((T4 + 5) + Ttva * (5 + T4))) <= Seuil:
+            Ep = Seuil - Ec
+            Tdep = 2 * Ep
+            Tsdaaep = 3*Ep + 2*Ec
+            TVAp = Ttva * (PF + Rd + 5 * Ec - 750 + 5 * Ep)
+            CEp = 0
+            M1 = Ep*(5 + 5*Ttva) + Ttva*(PF+Rd+5*Ec-750) + 2*Ec #+ calcul_TQR(Ep*(5 + 5*Ttva) + Ttva*(PF+Rd+5*Ec-750) + 2*Ec)
+            #TQR = calcul_TQR(M1)
+            M2 = Ep*(5 + 5*Ttva) + Ttva*(PF+Rd+5*Ec-750) + 2*Ec
+            Ms = M - M2
+            #TQRs = calcul_TQR(Ms)
+            Es = (M) / ((T4 + 5) + Ttva * (5 + T4))
+            Tdes = 2*Es
+            Tsdaaes = 3*Es
+            TVAs = Ttva * (Es * (T4 + 5))
+            CEs = Es * T4
+            Ea = Ep + Es
+            TVA =TVAp + TVAs
+            Tsdaae = Tsdaaep + Tsdaaes
+            Tde = Tdep + Tdes
+            CEa = CEp + CEs
+
+        elif Seuil < Ec + (M - Ttva * (PF + Rd + (Ec - Seuil) * T4 + (Ec - 150) * 5) - (Ec - Seuil) * T4) / ((T4 + 5) + Ttva * (T4 + 5)) <= (Seuil + 150):
+            Ea = (M - Ttva * (PF + Rd + (Ec - Seuil) * T4 + (Ec - 150) * 5) - (Ec - Seuil) * T4) / ((T4 + 5) + Ttva * (T4 + 5))
             Tde = 2 * Ea
             Tsdaae = 3 * Ea
             TVA = Ttva * (PF + Rd + (Ec - Seuil) * T4 + (Ec - 150) * 5 + Ea * (T4 + 5))
             CEa = Ea * T4 + (Ec - Seuil) * T4
+
+        elif (Ec + (M - Ttva * (PF + Rd + Ec * T4 - Seuil * T4 + 5 * Ec - 750) - (Ec - Seuil) * T4) / ((T4 + 5) + Ttva * (5 + T4))) > (Seuil + 150)   and   (M - Ttva * (PF + Rd + 150 * T4 + (Ec - (Seuil + 150)) * T5 + (Ec - 150) * 5) - (Ec - (Seuil + 150)) * T5 - 150 * T4) / ((T5 + 5) + Ttva * (5 + T5)) + Ec <= (Seuil+ 150):
+            Ep = (Seuil+150) - Ec
+            Tdep = 2 * Ep
+            Tsdaaep = 3*Ep
+            TVAp = Ttva * (PF + Rd + T4 * Ec - Seuil * T4 + 5 * Ec - 750 + Ep * (T4 + 5))
+            CEp = Ea * T4 + (Ec - Seuil) * T4
+            M1 = Ep*((T4+5) + (T4+5)*Ttva) + Ttva*(PF+Rd+Ec*T4-Seuil*T4+5*Ec-750) + (Ec - Seuil) * T4 #+ calcul_TQR( Ep*((T4+5) + (T4+5)*Ttva) + Ttva*(PF+Rd+Ec*T4-Seuil*T4+5*Ec-750) +(Ec - Seuil) * T4)
+            #TQR = calcul_TQR(M1)
+            M2 =  Ep*((T4+5) + (T4+5)*Ttva) + Ttva*(PF+Rd+Ec*T4-Seuil*T4+5*Ec-750) + (Ec - Seuil) * T4
+            Ms = M - M2
+            #TQRs = calcul_TQR(Ms)
+            Es = (M) / ((T5 + 5) + Ttva * (5 + T5))
+            Tdes = 2*Es
+            Tsdaaes = 3*Es
+            TVAs = Ttva * (Es * (T5 + 5))
+            CEs = Es * T5
+            Ea = Ep + Es
+            TVA =TVAp + TVAs
+            Tsdaae = Tsdaaep + Tsdaaes
+            Tde = Tdep + Tdes
+            CEa = CEp + CEs
+
         else:
-            Ea = (M - TQR - Ttva * (PF + Rd + 150 * T4 + (Ec - (Seuil + 150)) * T5 + (Ec - 150) * 5) - (Ec - (Seuil + 150)) * T5 - 150 * T4) / ((T5 + 5) + Ttva * (T5 + 5))
+            Ea = (M - Ttva * (PF + Rd + 150 * T4 + (Ec - (Seuil + 150)) * T5 + (Ec - 150) * 5) - (Ec - (Seuil + 150)) * T5 - 150 * T4) / ((T5 + 5) + Ttva * (T5 + 5))
             Tde = 2 * Ea
             Tsdaae = 3 * Ea
             TVA = Ttva * (PF + Rd + 150 * T4 + (Ec - (Seuil + 150)) * T5 + Ea * (T5 + 5))
             CEa = (Ea + Ec - (Seuil + 150)) * T5 + 150 * T4
 
     elif 150 < Ec <= Seuil:
-        if Ec + (M - TQR) / (5 + Ttva * 5) <= Seuil:
+        if Ec + (M) / (5 + Ttva * 5) <= Seuil:
             Ea = (M - TQR) / (5 + Ttva * 5)
             Tde = 2 * Ea
             Tsdaae = 3 * Ea
             TVA = Ttva * 5 * Ea
             CEa = 0
 
-        elif Seuil < Ec + (M - TQR - (Ec - Seuil) * T4 - Ttva * (Ec - Seuil) * T4) / ((T4 + 5) + Ttva * (T4 + 5)) <= (Seuil + 150):
-            Ea = (M - TQR - (Ec - Seuil) * T4 - Ttva * (Ec - Seuil) * T4) / ((T4 + 5) + Ttva * (T4 + 5))
+        elif Seuil < Ec + (M - (Ec - Seuil) * T4 - Ttva * (Ec - Seuil) * T4) / ((T4 + 5) + Ttva * (T4 + 5)) <= (Seuil + 150):
+            Ea = (M - (Ec - Seuil) * T4 - Ttva * (Ec - Seuil) * T4) / ((T4 + 5) + Ttva * (T4 + 5))
             Tde = 2 * Ea
             Tsdaae = 3 * Ea
             TVA = Ttva * (Ec - Seuil) * T4 + Ea * (T4 + 5)
             CEa = Ea * T4 - (Ec - Seuil) * T4
 
         else:
-            Ea = (M - TQR - Ttva * (150 * T4 + (Ec - (Seuil + 150)) * T5) - 150 * T4) / ((T5 + 5) + Ttva * (T5 + 5))
+            Ea = (M - Ttva * (150 * T4 + (Ec - (Seuil + 150)) * T5) - 150 * T4) / ((T5 + 5) + Ttva * (T5 + 5))
             Tde = 2 * Ea
             Tsdaae = 3 * Ea
             TVA = Ttva * (150 * T4 + (Ec - (Seuil + 150)) * T5 + Ea * (T5 + 5))
@@ -253,20 +513,20 @@ def agent_non_pam(M, Ec, TQR, PF, Rd, Seuil):
 
 
     elif Seuil < Ec <= (Seuil + 150):
-        if Ec + (M - TQR) / ((T4 + 5) + Ttva * (T4 + 5)) <= (Seuil + 150):
-            Ea = (M - TQR) / ((T4 + 5) + Ttva * (T4 + 5))
+        if Ec + (M) / ((T4 + 5) + Ttva * (T4 + 5)) <= (Seuil + 150):
+            Ea = (M) / ((T4 + 5) + Ttva * (T4 + 5))
             Tde = 2 * Ea
             Tsdaae = 3 * Ea
             TVA = Ttva * Ea * (T4 + 5)
             CEa = Ea * T4
         else:
-            Ea = (M - TQR - Ttva * (150 * T4 + (Ec - (Seuil + 150)) * T5) - 150 * T4 - (Ec - (Seuil + 150)) * T5) / ((T5 + 5) + Ttva * (T5 + 5))
+            Ea = (M - Ttva * (150 * T4 + (Ec - (Seuil + 150)) * T5) - 150 * T4 - (Ec - (Seuil + 150)) * T5) / ((T5 + 5) + Ttva * (T5 + 5))
             Tde = 2 * Ea
             Tsdaae = 3 * Ea
             TVA = Ttva * (150 * T4 + (Ec - (Seuil + 150)) * T5 + Ea * (T5 + 5))
             CEa = Ea * T5 + (Ec - (Seuil + 150)) * T5 + 150 * T4
     else:
-        Ea = (M - TQR) / ((T5 + 5) + Ttva * (T5 + 5))
+        Ea = (M) / ((T5 + 5) + Ttva * (T5 + 5))
         Tde = 2 * Ea
         Tsdaae = 3 * Ea
         TVA = Ttva * Ea * (T5 + 5)
@@ -298,7 +558,7 @@ def main():
 
 
         date_dernier_achat_str = input("\nEntrez la date du dernier achat (YYYY-MM-DD) : ")
-        date_dernier_achat = datetime.strptime(date_dernier_achat_str, "%Y-%m-%d")
+        date_dernier_achat = datetime.strptime(date_dernier_achat_str, "%d-%m-%Y")
 
         if est_premier_achat_du_mois(date_dernier_achat):
             date_actuelle = datetime.now()
@@ -369,7 +629,6 @@ def main():
                 CE, E, Tde, Tsdaae, TVA = agent_pam(M, TQR, PF, Rd, Seuil)
                 PF = 0
                 Rd = 0
-            Taxes = PF + Rd + calcul_TQR(PF + Rd)
             
             
 
@@ -382,26 +641,36 @@ def main():
                 PF = 10613
                 Rd = 1226
                 E, TVA, Tsdaae, Tde, CE = client_non_pam(M, Ec, PF, Rd, TQR)
+                PF = 0
+                Rd = 0
 
             elif CT == 17042:
                 PF = 15918
                 Rd = 1373
                 E, TVA, Tsdaae, Tde, CE = client_non_pam(M, Ec, PF, Rd, TQR)
+                PF = 0
+                Rd = 0
                 
             elif CT == 17052:
                 PF = 21224
                 Rd = 1373
                 E, TVA, Tsdaae, Tde, CE = client_non_pam(M, Ec, PF, Rd, TQR)
+                PF = 0
+                Rd = 0
         
             elif CT == 17062:
                 PF = 26531
                 Rd = 1373
                 E, TVA, Tsdaae, Tde, CE = client_non_pam(M, Ec, PF, Rd, TQR)
+                PF = 0
+                Rd = 0
                 
             elif CT == 17072:
                 PF = 31837
                 Rd = 1373
                 E, TVA, Tsdaae, Tde, CE = client_non_pam(M, Ec, PF, Rd, TQR)
+                PF = 0
+                Rd = 0
 
 
 
@@ -440,8 +709,7 @@ def main():
                 E, TVA, Tsdaae, Tde, CE = agent_non_pam(M, Ec, TQR, PF, Rd, Seuil)
                 PF = 0
                 Rd = 0
-            Taxes = 0 
-
+        Taxes = PF + Rd + calcul_TQR(PF + Rd)
 
         if M - Taxes < 0:
             print("\nVous ne pouvez pas acheter des unites!\nVous avez un credit de" ,  Taxes , "FCFA \navant d'avoir droit à des unites\n")
@@ -454,6 +722,7 @@ def main():
             print("TQR : ", TQR, "\n")
             print("Cout Energie : ", CE, "\n")
             print("Energie payée : ", E, "\n")
+            print ("Part Client: ", M, "\n")
             print("Code à saisir sur vore compteur:", combinaison, "\n")
 
 if __name__ == "__main__":
