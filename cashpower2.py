@@ -7,6 +7,7 @@ T4 = 60
 T5 = 96
 Ttva = 18/100
 Seuil = 0
+TQR = 0
 #serie = ''.join([str(random.randint(0, 9)) for _ in range(20)])
 groups_of_digits = [str(random.randint(0, 9999)).zfill(4) for _ in range(5)]
 combinaison = ' '.join(groups_of_digits)
@@ -102,26 +103,138 @@ def client_non_pam(M, Ec, PF, Rd, TQR):
             return Ea, TVA, Tsdaae, Tde, CEa
         
 def client_pam(M, TQR, PF, Rd, dd):
-    if (M - PF - Rd - TQR) / (T1 + 3) <= 50:
+    if (M - PF - Rd) / (T1 + 3) <= 50:
         E = (M - PF - Rd - TQR) / (T1 + 3)
         CE = T1 * E
         Tde = 2 * E
         Tsdaae = E
         TVA = 0
-    elif 50 < (M + (50 * T2) - PF - Rd - TQR - (50 * T1)) / (T2 + 5) <= 150:
-        E = (M + (50 * T2) - PF - Rd - TQR - (50 * T1)) / (T2 + 5)
+    
+    elif (M-PF-Rd)/(T1+3) > 50 and (M-PF-Rd-(50*T1)+(50*T2))/(T2+5):
+        Ep =50
+        Tdep = 2 * Ep
+        Tsdaaep = Ep
+        TVAp = 0
+        CEp = T1*Ep
+        M1 = 3*Ep
+        Ms = M - M1
+        #if (Ms) < 2*(Ep) + 0.1*(T2+5) : print("Monnaie =", Ms, "FCFA")    #Ce qui est toujours le cas
+        SA = (2*Ep - Ms) + 0.1*(T2+5) - Ms
+        print("\nVous ajoutez ", SA + calcul_TQR(M1+Ms+SA))
+        MA = float(input("\nEntrer la somme ajoutee: "))
+        if MA >= SA + calcul_TQR(M1+Ms+SA):
+           Ms = Ms + SA
+           Es = (Ms-2*Ep)/(T2+5)
+           Tdes = 2*Es
+           Tsdaaes = 3*Es + 2*Ep
+           TVAs = 0
+           CEs = Es*T2
+           TQR = calcul_TQR (Ms+M1)
+           M = Ms+M1 + TQR
+           E = Ep + Es
+           CE = CEp + CEs
+           Tde = Tdep + Tdes
+           Tsdaae = Tsdaaep + Tsdaaes
+           TVA =TVAp + TVAs
+           Monnaie = MA - (SA + calcul_TQR(M1+Ms+SA))
+           print("\nMonnaie = ", Monnaie, " FCFA")
+        else:
+            TQR = calcul_TQR (M1)
+            M = M1 + TQR
+            if  Ms - TQR < 0:
+                print("\nAjouter ", TQR-Ms, " pour le timbre quitance")
+            else:
+                print("\nMonnaie =", Ms-TQR, " FCFA")
+            E = Ep
+            CE = CEp
+            Tde = Tdep
+            Tsdaae = Tsdaaep
+            TVA =TVAp
+            
+            
+
+    elif 50 < (M + (50 * T2) - PF - Rd  - (50 * T1)) / (T2 + 5) <= 150:
+        E = (M + (50 * T2) - PF - Rd - (50 * T1)) / (T2 + 5)
         CE = (T1 * 50) + (E - 50) * T2
         Tde = 2 * E
         Tsdaae = 3 * E
         TVA = 0
-    elif 150 < (M + (Ttva * (5 + T2) * 150) + (50 * T2) - PF - Rd - TQR - (50 * T1) - (Ttva * ((PF + Rd) / dd))) / ((T2 + 5) + Ttva * (5 + T2)) <= 200:
-        E = (M + (Ttva * (5 + T2) * 150) + (50 * T2) - PF - Rd - TQR - (50 * T1) - (Ttva * ((PF + Rd) / dd))) / ((T2 + 5) + Ttva * (5 + T2))
+    
+    elif (M + (50 * T2) - PF - Rd  - (50 * T1)) / (T2 + 5) > 150   and   (M + (Ttva * (5 + T2) * 150) + (50 * T2) - PF - Rd - (50 * T1) - (Ttva * ((PF + Rd) / dd))) / ((T2 + 5) + Ttva * (5 + T2)) <= 150:
+        Ep =150
+        Tdep = 2 * Ep
+        Tsdaaep = 3*Ep
+        TVAp = 0
+        CEp = (T1 * 50) + (Ep - 50) * T2
+        M1 = (T2 + 5)*Ep + PF + Rd + 50*T1 - 50*T2
+        Ms = M - M1
+        #if (Ms) < (PF + Rd) / dd + 0.1*(T2+5 + Ttva*(T2+5)) : print("Monnaie =", Ms, "FCFA")    #Ce qui est toujours le cas
+        SA = ((PF + Rd) / dd - Ms) + 0.1*(T2+5 + Ttva*(T2+5)) - Ms
+        print("\nVous ajoutez ", SA + calcul_TQR(M1+Ms+SA))
+        MA = float(input("\nEntrer la somme ajoutee: "))
+        if MA >= SA + calcul_TQR(M1+Ms+SA):
+           Ms = Ms + SA
+           Es = (Ms-(PF + Rd) / dd)/(T2+5 + Ttva*(T2+5))
+           Tdes = 2*Es
+           Tsdaaes = 3*Es
+           TVAs = Ttva * ((PF + Rd) / dd + Es*(T2+5))
+           CEs = Es*T2
+           TQR = calcul_TQR (Ms+M1)
+           M = Ms+M1 + TQR
+           E = Ep + Es
+           CE = CEp + CEs
+           Tde = Tdep + Tdes
+           Tsdaae = Tsdaaep + Tsdaaes
+           TVA =TVAp + TVAs
+           Monnaie = MA - (SA + calcul_TQR(M1+Ms+SA))
+           print("\nMonnaie = ", Monnaie, " FCFA")
+        else:
+            TQR = calcul_TQR (M1)
+            M = M1 + TQR
+            if  Ms - TQR < 0:
+                print("\nAjouter ", TQR-Ms, " pour le timbre quitance")
+            else:
+                print("\nMonnaie =", Ms - TQR, " FCFA")
+            E = Ep
+            CE = CEp
+            Tde = Tdep
+            Tsdaae = Tsdaaep
+            TVA =TVAp
+            
+
+    elif 150 < (M + (Ttva * (5 + T2) * 150) + (50 * T2) - PF - Rd - (50 * T1) - (Ttva * ((PF + Rd) / dd))) / ((T2 + 5) + Ttva * (5 + T2)) <= 200:
+        E = (M + (Ttva * (5 + T2) * 150) + (50 * T2) - PF - Rd - (50 * T1) - (Ttva * ((PF + Rd) / dd))) / ((T2 + 5) + Ttva * (5 + T2))
         CE = (T1 * 50) + (E - 50) * T2
         Tde = 2 * E
         Tsdaae = 3 * E
         TVA = Ttva * ((PF + Rd) / dd + (E - 150) * T2 + (E - 150) * 5)
+    
+    elif (M + (Ttva * (5 + T2) * 150) + (50 * T2) - PF - Rd - (50 * T1) - (Ttva * ((PF + Rd) / dd))) / ((T2 + 5) + Ttva * (5 + T2)) > 200  and (M + (Ttva * (200 * T3 + 750)) + (200 * T3) - PF - Rd - (150 * T2) - (50 * T1) - Ttva * ((PF + Rd) / dd + (50 * T2))) / ((T3 + 5) + Ttva * (5 + T3)) <= 200:
+        Ep =200
+        Tdep = 2 * Ep
+        Tsdaaep = 3*Ep
+        TVAp = Ttva * ((PF + Rd) / dd + (Ep - 150) * T2 + (Ep - 150) * 5)
+        CEp = (T1 * 50) + (Ep - 50) * T2
+        M1 = ((T2 + 5) + Ttva*(T2 + 5))*Ep + PF + Rd + 50*T1 - 50*T2 + Ttva*((PF+Rd)/dd - 150*T2 -750)
+        Ms = M - M1
+        TQR = calcul_TQR(M1)
+        M = M1 + TQR
+        if  Ms - TQR < 0:
+            print("\nAjouter ", TQR-Ms, " pour le timbre quitance")
+        else:
+            print("\nMonnaie = ", Ms - TQR, " FCFA")
+        E = Ep
+        CE = CEp
+        Tde = Tdep
+        Tsdaae = Tsdaaep
+        TVA =TVAp
+    
+        #if (Ms) < 0.1*(T3+5 + Ttva*(T3+5)) : print("Monnaie =", Ms, "FCFA")    #Ce qui est toujours le cas
+        #SA = 0.1*(T3+5 + Ttva*(T3+5)) - Ms
+           
+
     else:
-        E = (M + (Ttva * (200 * T3 + 750)) + (200 * T3) - PF - Rd - TQR - (150 * T2) - (50 * T1) - Ttva * ((PF + Rd) / dd + (50 * T2))) / ((T3 + 5) + Ttva * (5 + T3))
+        E = (M + (Ttva * (200 * T3 + 750)) + (200 * T3) - PF - Rd - (150 * T2) - (50 * T1) - Ttva * ((PF + Rd) / dd + (50 * T2))) / ((T3 + 5) + Ttva * (5 + T3))
         CE = (T1 * 50) + (150 * T2) + (E - 200) * T3
         Tde = 2 * E
         Tsdaae = 3 * E
@@ -131,7 +244,7 @@ def client_pam(M, TQR, PF, Rd, dd):
 
 def agent_pam(M, TQR, PF, Rd, Seuil):
     if (M) / 3 <= 50:
-        E = (M - TQR) / 3
+        E = (M) / 3
         Tde = 2 * E
         Tsdaae = E
         TVA = 0
@@ -143,12 +256,11 @@ def agent_pam(M, TQR, PF, Rd, Seuil):
         Tsdaaep = Ep
         TVAp = 0
         CEp = 0
-        M1 = 3*Ep + calcul_TQR(3*Ep)
+        M1 = 3*Ep
         TQR = calcul_TQR(M1)
-        M2 = 3*Ep + TQR
-        Ms = M - M2
+        Ms = M - M1
         TQRs = calcul_TQR(Ms)
-        #if (Ms) <= 2*(Ep): print("Monnaie =", Ms, "FCFA")    dans tous les cas Ms sera <= 2*(Ep)
+        #if (Ms) <= 2*(Ep): print("Monnaie =", Ms, "FCFA")    #dans tous les cas Ms <= 2*(Ep)
         # SA = (2*Ep - MS)+1
         # print("Vous ajouter", SA)
         #MA = float(input("Entrer la somme ajoutee: "))
@@ -284,7 +396,7 @@ def agent_non_pam(M, Ec, TQR, PF, Rd, Seuil):
             M2 = 3*Ep
             Ms = M - M2
             #TQRs = calcul_TQR(Ms)
-            #if (Ms-TQRs-2*(Ep+Ec)) <= 0: print("Monnaie =", Ms, "FCFA")
+            #if (Ms-2*(Ep+Ec)) <= 0: print("Monnaie =", Ms, "FCFA")
             Es = (Ms-2*(Ep+Ec))/5
             Tdes = 2*Es
             Tsdaaes = 3*Es + 2*(Ep+Ec)
@@ -437,7 +549,7 @@ def agent_non_pam(M, Ec, TQR, PF, Rd, Seuil):
             Tsdaaep = 3*Ep + 2*Ec
             TVAp = Ttva * (PF + Rd + 5 * Ec - 750 + 5 * Ep)
             CEp = 0
-            M1 = Ep*(5 + 5*Ttva) + Ttva*(PF+Rd+5*Ec-750) + 2*Ec #+ calcul_TQR(Ep*(5 + 5*Ttva) + Ttva*(PF+Rd+5*Ec-750) + 2*Ec)
+            M1 = Ep*(5 + 5*Ttva) + Ttva*(PF+Rd+5*Ec-750) + 2*Ec                                 #+ calcul_TQR(Ep*(5 + 5*Ttva) + Ttva*(PF+Rd+5*Ec-750) + 2*Ec)
             #TQR = calcul_TQR(M1)
             M2 = Ep*(5 + 5*Ttva) + Ttva*(PF+Rd+5*Ec-750) + 2*Ec
             Ms = M - M2
@@ -537,7 +649,6 @@ def agent_non_pam(M, Ec, TQR, PF, Rd, Seuil):
 def main():
     M = int(input("\nEntrez un Montant : "))
 
-    TQR = calcul_TQR(M)
 
     CT = int(input("\nEntrez le code tarif du compteur : "))
     
